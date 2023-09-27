@@ -5,6 +5,7 @@ const content = document.querySelector("#content")
 
 form.addEventListener("submit", async (event) => {
   event.preventDefault()
+  content.classList.add("placeholder")
 
   const videoURL = input.value
   if (!videoURL.includes("shorts")) {
@@ -18,6 +19,13 @@ form.addEventListener("submit", async (event) => {
 
   content.textContent = "Obtendo o texto do audio..."
 
- const transcription = await server.get("/sumary" + videoID)
-  content.textContent = transcription.data.result
+  const transcription = await server.get("/summary/" + videoID)
+  content.textContent = "Realizando o resumo..."
+
+  const summary = await server.post("/summary", {
+    text: transcription.data.result,
+  })
+
+  content.textContent = summary.data.result
+  content.classList.remove("placeholder")
 })
